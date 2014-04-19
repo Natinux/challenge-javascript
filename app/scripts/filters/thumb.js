@@ -1,9 +1,11 @@
+'use strict';
+
 app.filter('thumb', function() {
     return function(image, brand) {
         if (image) {
             return image;
         }
-        switch (brand.brand){
+        switch (brand.brand) {
             case 'Volkswagen':
                 return 'http://www.garrabh.com.br/blog/wp-content/uploads/2014/03/volkswagen-logo.jpg';
             case 'Honda':
@@ -15,6 +17,5 @@ app.filter('thumb', function() {
             default:
                 return 'http://www.exchange3d.com/images/uploads/aff1884/Generic_Car_Upper_01.jpg';
         }
-
-   }
+    };
 });

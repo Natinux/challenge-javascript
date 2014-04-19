@@ -3,11 +3,13 @@
 </header>
 
 <section class="box-vehicle-form">
-    <form action="#" id="vehicle-form" >
+    <form action="#" id="vehicle-form">
         <section class="col-lg-4">
             <div class="form-group">
                 <label for="registration-plate">Placa<span> *</span></label>
                 <input type="text" class="form-control" id="registration-plate" placeholder="ABC-1234" ng-model="car.registrationPlate" required>
+                <span class="error" ng-show="registrationPlateError">Campo obrigatório</span>
+
             </div>
 
             <div class="form-group">
@@ -15,6 +17,7 @@
                 <select class="form-control" id="brand" ng-model="car.brand" ng-options="brand.name  for brand in brands" ng-change="getCars()" required>
                     <option value="">Escolha uma marca</option>
                 </select>
+                <span class="error" ng-show="brandError">Campo obrigatório</span>
             </div>
 
             <div class="form-group">
@@ -28,20 +31,23 @@
         <section class="col-lg-4 col-lg-offset-2">
             <div class="form-group">
                 <label for="color">Cor</label>
-                <select class="form-control" id="color" ng-model="car.color" ng-options="color.label for color in colors">
+                <select class="form-control" id="color" ng-model="car.color" >
                     <option value="">Escolha uma cor</option>
-
+                    <option ng:repeat="color in colors" value="{{color}}">
+                            {{ color }}
+                    </option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="model">Modelo<span> *</span></label>
                 <select class="form-control" id="model" ng-model="car.model" ng-options="model for model in carsModels" ng-disabled="carsModels.length == 0" required>
-                  <option value="">Escolha o modelo</option>
-                  <option ng:repeat="model in brands" value="{{brand.name}}">
-                        {{ brand.name }}
+                    <option value="">Escolha o modelo</option>
+                    <option ng:repeat="model in brands" value="{{brand.name}}">
+                            {{ brand.name }}
                     </option>
                 </select>
+                <span class="error" ng-show="modelError">Campo obrigatório</span>
             </div>
 
             <div class="form-group">
@@ -51,18 +57,17 @@
         </section>
         <div class=" col-lg-10 box-action">
             <div class="col-lg-3">
-                <button type="button" class="btn btn-default btn-block">Cancelar</button>
+                <button type="button" class="btn btn-default btn-block" ng-click="cancel()">Cancelar</button>
             </div>
             <div class="col-lg-3 col-lg-offset-6">
-                <button type="submit" class="btn btn-primary btn-block" ng-submit="add()">Adicionar</button>
-
-                <!-- <button type="button" class="btn btn-success btn-block">Salvar</button> -->
+                <button type="button" class="btn btn-primary btn-block" ng-click="add()" ng-show="!editBtn">Adicionar</button>
+                <button type="button" class="btn btn-success btn-block" ng-show="editBtn">Salvar</button>
             </div>
         </div>
     </form>
 </section>
 
-<section class="col-lg-10" ng-controller="VehicleController">
+<section class="col-lg-10">
     <div class="col-lg-12">
         <h3>Buscar:</h3>
         <div class="form-group col-lg-4">
@@ -77,6 +82,9 @@
     </div>
 
     <div class="col-lg-12">
+    <!-- <ul>
+        <li ng-repeat="car in cars">{{car.model}}</li>
+    </ul> -->
         <table id="results" class="table table-striped table-bordered table-hover">
             <thead>
             <tr>
@@ -86,6 +94,7 @@
                 <th>Modelo</th>
                 <th>Combustível</th>
                 <th>Cor</th>
+                <th>Ação</th>
             </tr>
             </thead>
             <tbody>
@@ -96,15 +105,20 @@
                 <td id="model">{{car.model}}</td>
                 <td id="fuel">{{car.fuel}}</td>
                 <td id="color">{{car.color}}</td>
+                <td>
+                    <a ng-click="editCar($index)" class="edit-car">Editar</a>
+                    <a ng-click="deleteCar($index)">Excluir</a>
+
+                </td>
             </tr>
             </tbody>
         </table>
         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-        Anterior
-    </button>
-    {{currentPage+1}}/{{numberOfPages()}}
-    <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">
-        Próxima
-    </button>
+            Anterior
+        </button>
+        {{currentPage+1}}/{{numberOfPages()}}
+        <button ng-disabled="currentPage >= cars.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+            Próxima
+        </button>
     </div>
 </section>

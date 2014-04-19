@@ -1,128 +1,87 @@
 'use strict';
 
-app.controller('VehicleController', function($scope) {
-    //put all in factories.
-    $scope.colors = [
-        { 'label': 'Amarelo', 'code': '#f1c40f' },
-        { 'label': 'Azul', 'code': '#3498db'},
-        { 'label': 'Branco', 'code': '#ecf0f1'},
-        { 'label': 'Cinza', 'code': '#95a5a6'},
-        { 'label': 'Laranja', 'code': '#e67e22'},
-        { 'label': 'Marrom', 'code': '#5c3d3b'},
-        { 'label': 'Prata', 'code': '#bdc3c7'},
-        { 'label': 'Preto', 'code': '#050505'},
-        { 'label': 'Rosa', 'code': '#ff80ab'},
-        { 'label': 'Roxo', 'code': '#8e44ad'},
-        { 'label': 'Verde', 'code': '#27ae60'},
-        { 'label': 'Vermelho', 'code': '#c0392b'}
-    ];
 
-    $scope.fuels = [ 'Flex', 'Alcool', 'Gasolina' ];
 
-    $scope.brands = [
-        {
-            'name': 'Ford',
-            'models': [
-                'Ecosport',
-                'Fiesta',
-                'Ranger'
-            ],
-        },
-        {
-            'name': 'Chevrolet',
-            'models': [
-                'Corsa',
-                'Prisma',
-                'Corsa Classic',
-                'S10'
-            ],
-        },
-        {
-            'name': 'Honda',
-            'models': [
-                'Accord',
-                'Civic',
-                'City',
-                'Fit'
-            ],
-        },
-        {
-            'name': 'Volkswagen',
-            'models': [
-                'Fox',
-                'Fusca',
-                'Gol'
-            ],
-        }
-    ];
 
-    $scope.cars = [ 
-        {
-            "fuel": "Flex",
-            "image": null,
-            "brand": "Volkswagen",
-            "model": "Gol",
-            "registrationPlate": "FFF­-5498",
-            "color": "Prata"
-        },
-        { 
-            "fuel": "Gasolina",
-            "image": null,
-            "brand": "Volkswagen",
-            "model": "Fox",
-            "registrationPlate": "FOX­-4125",
-            "color": "Preto"
-        },
-        { 
-            "fuel": "Alcool",
-            "image": "http://www.sindicond.com.br/sindicond/files/noticia/new/volkswagen-fusca-1363209555530_956x500.jpg",
-            "brand": "Volkswagen",
-            "model": "Fusca",
-            "registrationPlate": "PAI­-4121",
-            "color": "Azul"
-          }
-    ];
 
-    //-------
-    $scope.carsModels = [];
-    $scope.car = [];
+app.controller('VehicleController', function($scope, initialData, colors, fuels, brands) {
+    $scope.cars = initialData;
+    $scope.colors = colors;
+    $scope.fuels = fuels;
+    $scope.brands = brands;
+
+    $scope.carsModels = {};
+    $scope.car = {};
     $scope.currentPage = 0;
     $scope.pageSize = 5;
+    $scope.registrationPlateError,
+    $scope.brandError,
+    $scope.modelError  = false;
+    $scope.editBtn = false;
 
     //change to directive
     $scope.getCars = function () {
         delete $scope.car.model;
         $scope.carsModels = ($scope.car.brand !== null) ? $scope.car.brand.models : '';
-        console.log($scope.car);
         return $scope.carsModels;
-    }
+    };
 
     //change to filter
     $scope.getImage = function () {
         return $scope.car.image;
+    };
+
+    $scope.deleteCar = function (index) {
+        $scope.cars.splice(index, 1);
+    }
+
+    $scope.cancel = function () {
+        $scope.editBtn = false;
+        document.getElementById("vehicle-form").reset();
+    }
+
+    $scope.editCar = function (index) {
+        $scope.editBtn = true;
+        console.log($scope.cars[index]);
+
+        $scope.car.registrationPlate = $scope.cars[index].registrationPlate;
+        $scope.car.image = $scope.cars[index].image;
+        $scope.car.brand = $scope.cars[index].brand;
+        $scope.car.model = $scope.cars[index].model;
+        $scope.car.color = $scope.cars[index].color;
+        $scope.car.fuel = $scope.cars[index].fuel;
     }
 
     $scope.add = function() {
-        $scope.cars.push({
-            "fuel": $scope.car.fuel,
-            "image": $scope.getImage(),
-            "brand": $scope.car.brand.name,
-            "model": $scope.car.model,
-            "registrationPlate": $scope.car.registrationPlate,
-            "color": $scope.car.color.label
-        });
-        console.log($scope.cars);
-   };
+        $scope.registrationPlateError = (!$scope.car.registrationPlate) ? true : false ;
+        $scope.brandError = (!$scope.car.brand) ? true : false ;
+        $scope.modelError = (!$scope.car.brand) ? true : false ;
+        if($scope.car.brand) {
+            $scope.modelError = (!$scope.car.model) ? true : false ;
+        }
+
+        if(!this.brandError && !this.modelError && !this.registrationPlateError){
+            $scope.cars.push({
+                'fuel': $scope.car.fuel,
+                'image': $scope.getImage(),
+                'brand': $scope.car.brand.name,
+                'model': $scope.car.model,
+                'registrationPlate': $scope.car.registrationPlate,
+                'color': $scope.car.color
+            });
+
+            $scope.car = null;
+        }
+    };
 
 
     $scope.numberOfPages=function(){
         return Math.ceil($scope.cars.length/$scope.pageSize);
-    }
+    };
 
 
 
     console.log(Math.floor(Math.random(0,100)*1000));
+    console.log('-----');
     console.log($scope);
 });
-
-

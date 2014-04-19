@@ -26,7 +26,7 @@ describe('Controller: VehicleController', function() {
         expect(scope.cars[0]).toEqual({
             "fuel": "Flex",
             "image": null,
-            "brand": "Volkswagem",
+            "brand": "Volkswagen",
             "model": "Gol",
             "registrationPlate": "FFF­-5498",
             "color": "Prata"
