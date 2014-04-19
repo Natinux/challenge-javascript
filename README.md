@@ -15,3 +15,6 @@ Finally:
 
 Run the server:
     grunt serve
+    
+Tests:
+    grunt test
