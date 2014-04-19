@@ -33,12 +33,27 @@ app.controller('VehicleController', function($scope, initialData, colors, fuels,
 
     $scope.deleteCar = function (index) {
         $scope.cars.splice(index, 1);
-    }
+    };
 
     $scope.cancel = function () {
         $scope.editBtn = false;
         document.getElementById("vehicle-form").reset();
-    }
+    };
+
+    $scope.save = function (index) {
+        $scope.registrationPlateError = (!$scope.car.registrationPlate) ? true : false ;
+        $scope.brandError = (!$scope.car.brand) ? true : false ;
+        $scope.modelError = (!$scope.car.brand) ? true : false ;
+        if($scope.car.brand) {
+            $scope.modelError = (!$scope.car.model) ? true : false ;
+        }
+
+        if(!this.brandError && !this.modelError && !this.registrationPlateError){
+            //
+
+            $scope.car = null;
+        }
+    };
 
     $scope.editCar = function (index) {
         $scope.editBtn = true;
@@ -50,9 +65,11 @@ app.controller('VehicleController', function($scope, initialData, colors, fuels,
         $scope.car.model = $scope.cars[index].model;
         $scope.car.color = $scope.cars[index].color;
         $scope.car.fuel = $scope.cars[index].fuel;
+
+        $scope.save(index);
     }
 
-    $scope.add = function() {
+    $scope.add = function () {
         $scope.registrationPlateError = (!$scope.car.registrationPlate) ? true : false ;
         $scope.brandError = (!$scope.car.brand) ? true : false ;
         $scope.modelError = (!$scope.car.brand) ? true : false ;
@@ -75,7 +92,7 @@ app.controller('VehicleController', function($scope, initialData, colors, fuels,
     };
 
 
-    $scope.numberOfPages=function(){
+    $scope.numberOfPages=function (){
         return Math.ceil($scope.cars.length/$scope.pageSize);
     };
 
